@@ -7,6 +7,7 @@ namespace FilmRating.Models.EntityFramework
     public class Film
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("flm_id")]
         public int FilmId { get; set; }
 
@@ -22,5 +23,9 @@ namespace FilmRating.Models.EntityFramework
 
         [Column("flm_duree", TypeName = "numeric(3,0)")]
         public decimal Duree { get; set; }
+
+        [Column("flm_genre")]
+        [StringLength(30)]
+        public string Genre { get; set; }
     }
 }
