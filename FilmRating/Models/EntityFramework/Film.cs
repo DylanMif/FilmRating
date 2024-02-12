@@ -27,5 +27,8 @@ namespace FilmRating.Models.EntityFramework
         [Column("flm_genre")]
         [StringLength(30)]
         public string Genre { get; set; }
+
+        [InverseProperty(nameof(Notation.FilmNote))]
+        public virtual ICollection<Notation> NotesFilm { get; set; }
     }
 }

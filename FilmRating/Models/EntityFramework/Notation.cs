@@ -17,5 +17,13 @@ namespace FilmRating.Models.EntityFramework
         [Column("not_note")]
         [Range(0, 5)]
         public int Note { get; set; }
+
+        [ForeignKey(nameof(FilmId))]
+        [InverseProperty("NotesFilm")]
+        public virtual Film FilmNote { get; set; }
+
+        [ForeignKey(nameof(UtilisateurId))]
+        [InverseProperty("NotesUtilisateur")]
+        public virtual Utilisateur UtilisateurNotant { get; set; }
     }
 }

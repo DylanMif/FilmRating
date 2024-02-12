@@ -57,5 +57,8 @@ namespace FilmRating.Models.EntityFramework
 
         [Column("utl_datecreation", TypeName = "date")]
         public DateTime DateCreation { get; set; }
+
+        [InverseProperty(nameof(Notation.UtilisateurNotant))]
+        public virtual ICollection<Notation> NotesUtilisateur { get; set; }
     }
 }
