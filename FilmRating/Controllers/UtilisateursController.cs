@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FilmRating.Models.EntityFramework;
 using TP3Console.Models.EntityFramework;
 using FilmRating.Models.DataManager;
+using FilmRating.Repository;
 
 namespace FilmRating.Controllers
 {
@@ -15,13 +16,13 @@ namespace FilmRating.Controllers
     [ApiController]
     public class UtilisateursController : ControllerBase
     {
-        private readonly UtilisateurManager utilisateurManager;
+        private readonly IDataRepository<Utilisateur> dataRepository;
         //private readonly FilmDBContext _context;
 
-        public UtilisateursController(UtilisateurManager userManager)
+        public UtilisateursController(IDataRepository<Utilisateur> dataRepo)
         {
             //_context = context;
-            utilisateurManager = userManager;
+            dataRepository = dataRepo;
         }
 
         // GET: api/Utilisateurs
@@ -29,7 +30,7 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurs")]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
-            return utilisateurManager.GetAll();
+            return dataRepository.GetAll();
         }
 
         // GET: api/Utilisateurs/5
@@ -38,7 +39,7 @@ namespace FilmRating.Controllers
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
 
-            var utilisateur = utilisateurManager.GetById(id);
+            var utilisateur = dataRepository.GetById(id);
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
             if (utilisateur == null)
             {
@@ -52,7 +53,7 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurByEmail")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurByEmail(string email)
         {
-            var utilisateur = utilisateurManager.GetByString(email);
+            var utilisateur = dataRepository.GetByString(email);
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
             if (utilisateur == null)
             {
@@ -71,14 +72,14 @@ namespace FilmRating.Controllers
             {
                 return BadRequest();
             }
-            var userToUpdate = utilisateurManager.GetById(id);
+            var userToUpdate = dataRepository.GetById(id);
             if (userToUpdate == null)
             {
                 return NotFound();
             }
             else
             {
-                utilisateurManager.Update(userToUpdate.Value, utilisateur);
+                dataRepository.Update(userToUpdate.Value, utilisateur);
                 return NoContent();
             }
         }
@@ -93,7 +94,7 @@ namespace FilmRating.Controllers
             {
                 return BadRequest(ModelState);
             }
-            utilisateurManager.Add(utilisateur);
+            dataRepository.Add(utilisateur);
             return CreatedAtAction("GetUtilisateurById", new { id = utilisateur.UtilisateurId }, utilisateur); // GetById : nom de l’action
         }
 
@@ -102,12 +103,12 @@ namespace FilmRating.Controllers
         [ActionName("DeleteUtilisateur")]
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
-            var utilisateur = utilisateurManager.GetById(id);
+            var utilisateur = dataRepository.GetById(id);
             if (utilisateur == null)
             {
                 return NotFound();
             }
-            utilisateurManager.Delete(utilisateur.Value);
+            dataRepository.Delete(utilisateur.Value);
             return NoContent();
         }
     }
