@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TP3Console.Models.EntityFramework;
@@ -11,9 +12,10 @@ using TP3Console.Models.EntityFramework;
 namespace FilmRating.Migrations
 {
     [DbContext(typeof(FilmDBContext))]
-    partial class FilmDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240214082301_CorrectionNotesUtilisateur")]
+    partial class CorrectionNotesUtilisateur
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

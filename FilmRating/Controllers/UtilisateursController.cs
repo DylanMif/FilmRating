@@ -10,7 +10,7 @@ using TP3Console.Models.EntityFramework;
 
 namespace FilmRating.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UtilisateursController : ControllerBase
     {
@@ -23,6 +23,7 @@ namespace FilmRating.Controllers
 
         // GET: api/Utilisateurs
         [HttpGet]
+        [ActionName("GetUtilisateurs")]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
           if (_context.Utilisateurs == null)
@@ -34,7 +35,8 @@ namespace FilmRating.Controllers
 
         // GET: api/Utilisateurs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Utilisateur>> GetUtilisateur(int id)
+        [ActionName("GetUtilisateurById")]
+        public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
           if (_context.Utilisateurs == null)
           {
@@ -50,9 +52,29 @@ namespace FilmRating.Controllers
             return utilisateur;
         }
 
+        // GET : api/Utilisateurs/dydy@gmail.com
+        [HttpGet("{email}")]
+        [ActionName("GetUtilisateurByEmail")]
+        public async Task<ActionResult<Utilisateur>> GetUtilisateurByEmail(string email)
+        {
+            if(_context.Utilisateurs == null)
+            {
+                return NotFound();
+            }
+            var utilisateur = await _context.Utilisateurs.SingleAsync(u => u.Mail == email);
+
+            if(utilisateur == null)
+            {
+                return NotFound();
+            }
+
+            return utilisateur;
+        }
+
         // PUT: api/Utilisateurs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ActionName("PutUtilisateur")]
         public async Task<IActionResult> PutUtilisateur(int id, Utilisateur utilisateur)
         {
             if (id != utilisateur.UtilisateurId)
@@ -84,6 +106,7 @@ namespace FilmRating.Controllers
         // POST: api/Utilisateurs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ActionName("PostUtilisateur")]
         public async Task<ActionResult<Utilisateur>> PostUtilisateur(Utilisateur utilisateur)
         {
           if (_context.Utilisateurs == null)
@@ -93,11 +116,12 @@ namespace FilmRating.Controllers
             _context.Utilisateurs.Add(utilisateur);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUtilisateur", new { id = utilisateur.UtilisateurId }, utilisateur);
+            return CreatedAtAction("GetUtilisateurById", new { id = utilisateur.UtilisateurId }, utilisateur);
         }
 
         // DELETE: api/Utilisateurs/5
         [HttpDelete("{id}")]
+        [ActionName("DeleteUtilisateur")]
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
             if (_context.Utilisateurs == null)

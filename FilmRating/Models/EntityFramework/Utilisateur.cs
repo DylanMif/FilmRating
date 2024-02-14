@@ -26,6 +26,7 @@ namespace FilmRating.Models.EntityFramework
         public string? Mobile { get; set; }
 
         [Column("utl_mail")]
+        [EmailAddress]
         [StringLength(100)]
         public string Mail { get; set; }
 
@@ -58,6 +59,6 @@ namespace FilmRating.Models.EntityFramework
         public DateTime DateCreation { get; set; }
 
         [InverseProperty(nameof(Notation.UtilisateurNotant))]
-        public virtual ICollection<Notation> NotesUtilisateur { get; set; }
+        public virtual ICollection<Notation>? NotesUtilisateur { get; set; }
     }
 }
