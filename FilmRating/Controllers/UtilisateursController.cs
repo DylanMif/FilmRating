@@ -61,7 +61,7 @@ namespace FilmRating.Controllers
             {
                 return NotFound();
             }
-            var utilisateur = await _context.Utilisateurs.SingleAsync(u => u.Mail == email);
+            var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Mail == email);
 
             if(utilisateur == null)
             {
