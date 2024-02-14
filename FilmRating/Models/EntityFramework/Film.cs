@@ -16,7 +16,7 @@ namespace FilmRating.Models.EntityFramework
         public string Titre { get; set; }
 
         [Column("flm_resume")]
-        public string Resume { get; set; }
+        public string? Resume { get; set; }
 
         [Column("flm_datesortie", TypeName = "date")]
         public DateTime DateSortie { get; set; }

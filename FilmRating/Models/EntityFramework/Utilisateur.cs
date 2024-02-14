@@ -46,7 +46,6 @@ namespace FilmRating.Models.EntityFramework
 
         [Column("utl_pays")]
         [StringLength(50)]
-        [DefaultValue("France")]
         public string? Pays { get; set; }
 
         [Column("utl_latitude", TypeName = "real")]

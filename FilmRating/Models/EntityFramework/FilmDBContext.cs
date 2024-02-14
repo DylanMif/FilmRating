@@ -25,14 +25,6 @@ namespace TP3Console.Models.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseLoggerFactory(MyLoggerFactory)
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql("Server=localhost;port=5432;Database=RatingFilmsDB;uid=postgres;password=postgres;");
-                /*optionsBuilder.UseLazyLoadingProxies();*/
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +48,8 @@ namespace TP3Console.Models.EntityFramework
                     .HasConstraintName("fk_notation_film");
             });
 
-            modelBuilder.Entity<Utilisateur>().Property(e => e.DateCreation).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<Utilisateur>().Property(e => e.DateCreation).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Utilisateur>().Property(e => e.Pays).HasDefaultValue("France");
 
             OnModelCreatingPartial(modelBuilder);
         }
