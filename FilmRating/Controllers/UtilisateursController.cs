@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FilmRating.Models.EntityFramework;
 using TP3Console.Models.EntityFramework;
+using FilmRating.Models.DataManager;
 
 namespace FilmRating.Controllers
 {
@@ -14,11 +15,13 @@ namespace FilmRating.Controllers
     [ApiController]
     public class UtilisateursController : ControllerBase
     {
-        private readonly FilmDBContext _context;
+        private readonly UtilisateurManager utilisateurManager;
+        //private readonly FilmDBContext _context;
 
-        public UtilisateursController(FilmDBContext context)
+        public UtilisateursController(UtilisateurManager userManager)
         {
-            _context = context;
+            //_context = context;
+            utilisateurManager = userManager;
         }
 
         // GET: api/Utilisateurs
@@ -26,11 +29,7 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurs")]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
-          if (_context.Utilisateurs == null)
-          {
-              return NotFound();
-          }
-            return await _context.Utilisateurs.ToListAsync();
+            return utilisateurManager.GetAll();
         }
 
         // GET: api/Utilisateurs/5
@@ -38,17 +37,13 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurById")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
-          if (_context.Utilisateurs == null)
-          {
-              return NotFound();
-          }
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
 
+            var utilisateur = utilisateurManager.GetById(id);
+            //var utilisateur = await _context.Utilisateurs.FindAsync(id);
             if (utilisateur == null)
             {
                 return NotFound();
             }
-
             return utilisateur;
         }
 
@@ -57,17 +52,12 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurByEmail")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurByEmail(string email)
         {
-            if(_context.Utilisateurs == null)
+            var utilisateur = utilisateurManager.GetByString(email);
+            //var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            if (utilisateur == null)
             {
                 return NotFound();
             }
-            var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Mail == email);
-
-            if(utilisateur == null)
-            {
-                return NotFound();
-            }
-
             return utilisateur;
         }
 
@@ -81,26 +71,16 @@ namespace FilmRating.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(utilisateur).State = EntityState.Modified;
-
-            try
+            var userToUpdate = utilisateurManager.GetById(id);
+            if (userToUpdate == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!UtilisateurExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                utilisateurManager.Update(userToUpdate.Value, utilisateur);
+                return NoContent();
             }
-
-            return NoContent();
         }
 
         // POST: api/Utilisateurs
@@ -109,14 +89,12 @@ namespace FilmRating.Controllers
         [ActionName("PostUtilisateur")]
         public async Task<ActionResult<Utilisateur>> PostUtilisateur(Utilisateur utilisateur)
         {
-          if (_context.Utilisateurs == null)
-          {
-              return Problem("Entity set 'FilmDBContext.Utilisateurs'  is null.");
-          }
-            _context.Utilisateurs.Add(utilisateur);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUtilisateurById", new { id = utilisateur.UtilisateurId }, utilisateur);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            utilisateurManager.Add(utilisateur);
+            return CreatedAtAction("GetUtilisateurById", new { id = utilisateur.UtilisateurId }, utilisateur); // GetById : nom de l’action
         }
 
         // DELETE: api/Utilisateurs/5
@@ -124,25 +102,13 @@ namespace FilmRating.Controllers
         [ActionName("DeleteUtilisateur")]
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
-            if (_context.Utilisateurs == null)
-            {
-                return NotFound();
-            }
-            var utilisateur = await _context.Utilisateurs.FindAsync(id);
+            var utilisateur = utilisateurManager.GetById(id);
             if (utilisateur == null)
             {
                 return NotFound();
             }
-
-            _context.Utilisateurs.Remove(utilisateur);
-            await _context.SaveChangesAsync();
-
+            utilisateurManager.Delete(utilisateur.Value);
             return NoContent();
-        }
-
-        private bool UtilisateurExists(int id)
-        {
-            return (_context.Utilisateurs?.Any(e => e.UtilisateurId == id)).GetValueOrDefault();
         }
     }
 }
