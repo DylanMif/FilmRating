@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using TP3Console.Models.EntityFramework;
 using FilmRating.Models.EntityFramework;
 using Microsoft.AspNetCore.Mvc;
+using FilmRating.Repository;
+using FilmRating.Models.DataManager;
 
 namespace FilmRating.Controllers.Tests
 {
@@ -17,12 +19,16 @@ namespace FilmRating.Controllers.Tests
     {
         private UtilisateursController controller;
         private FilmDBContext context;
+        private IDataRepository<Utilisateur> dataRepository;
+
+
         [TestInitialize]
         public void Init()
         {
             var builder = new DbContextOptionsBuilder<FilmDBContext>().UseNpgsql("Server=localhost;port=5432;Database=RatingFilmsDB; uid=postgres;password=postgres;");
             context = new FilmDBContext(builder.Options);
-            controller = new UtilisateursController(context);
+            dataRepository = new UtilisateurManager(context);
+            controller = new UtilisateursController(dataRepository);
         }
 
         [TestMethod()]
@@ -53,7 +59,7 @@ namespace FilmRating.Controllers.Tests
             // Act
             var res = controller.GetUtilisateurById(-1).Result;
             // Assert
-            Assert.IsInstanceOfType(res.Result, typeof(NotFoundResult));
+            Assert.IsNull(res.Value);
         }
 
         [TestMethod()]
@@ -73,7 +79,7 @@ namespace FilmRating.Controllers.Tests
             // Act
             var res = controller.GetUtilisateurByEmail("g").Result;
             // Assert
-            Assert.IsInstanceOfType(res.Result, typeof(NotFoundResult));
+            Assert.IsNull(res.Value);
         }
 
         [TestMethod()]

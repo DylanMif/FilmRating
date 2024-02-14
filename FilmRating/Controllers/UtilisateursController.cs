@@ -30,7 +30,7 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurs")]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
-            return dataRepository.GetAll();
+            return await dataRepository.GetAllAsync();
         }
 
         // GET: api/Utilisateurs/5
@@ -39,7 +39,7 @@ namespace FilmRating.Controllers
         public async Task<ActionResult<Utilisateur>> GetUtilisateurById(int id)
         {
 
-            var utilisateur = dataRepository.GetById(id);
+            var utilisateur = await dataRepository.GetByIdAsync(id);
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
             if (utilisateur == null)
             {
@@ -53,7 +53,7 @@ namespace FilmRating.Controllers
         [ActionName("GetUtilisateurByEmail")]
         public async Task<ActionResult<Utilisateur>> GetUtilisateurByEmail(string email)
         {
-            var utilisateur = dataRepository.GetByString(email);
+            var utilisateur = await dataRepository.GetByStringAsync(email);
             //var utilisateur = await _context.Utilisateurs.FindAsync(id);
             if (utilisateur == null)
             {
@@ -72,14 +72,14 @@ namespace FilmRating.Controllers
             {
                 return BadRequest();
             }
-            var userToUpdate = dataRepository.GetById(id);
+            var userToUpdate = await dataRepository.GetByIdAsync(id);
             if (userToUpdate == null)
             {
                 return NotFound();
             }
             else
             {
-                dataRepository.Update(userToUpdate.Value, utilisateur);
+                await dataRepository.UpdateAsync(userToUpdate.Value, utilisateur);
                 return NoContent();
             }
         }
@@ -94,7 +94,7 @@ namespace FilmRating.Controllers
             {
                 return BadRequest(ModelState);
             }
-            dataRepository.Add(utilisateur);
+            await dataRepository.AddAsync(utilisateur);
             return CreatedAtAction("GetUtilisateurById", new { id = utilisateur.UtilisateurId }, utilisateur); // GetById : nom de l’action
         }
 
@@ -103,12 +103,12 @@ namespace FilmRating.Controllers
         [ActionName("DeleteUtilisateur")]
         public async Task<IActionResult> DeleteUtilisateur(int id)
         {
-            var utilisateur = dataRepository.GetById(id);
+            var utilisateur = await dataRepository.GetByIdAsync(id);
             if (utilisateur == null)
             {
                 return NotFound();
             }
-            dataRepository.Delete(utilisateur.Value);
+            await dataRepository.DeleteAsync(utilisateur.Value);
             return NoContent();
         }
     }
