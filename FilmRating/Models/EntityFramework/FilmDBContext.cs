@@ -35,16 +35,16 @@ namespace TP3Console.Models.EntityFramework
                 entity.HasKey(e => new { e.UtilisateurId, e.FilmId })
                     .HasName("pk_notations");
 
-                entity.HasOne(n => n.UtilisateurNotant)
-                    .WithMany(u => u.NotesUtilisateur)
-                    .HasForeignKey(n => n.UtilisateurId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                entity.HasOne(d => d.UtilisateurNotant)
+                    .WithMany(p => p.NotesUtilisateur)
+                    .HasForeignKey(d => d.UtilisateurId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("fk_notation_utilisateur");
 
-                entity.HasOne(n => n.FilmNote)
-                    .WithMany(f => f.NotesFilm)
-                    .HasForeignKey(n => n.FilmId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                entity.HasOne(d => d.FilmNote)
+                    .WithMany(p => p.NotesFilm)
+                    .HasForeignKey(d => d.FilmId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("fk_notation_film");
             });
 

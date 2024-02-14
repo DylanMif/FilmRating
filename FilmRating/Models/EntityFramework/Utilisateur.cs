@@ -10,7 +10,6 @@ namespace FilmRating.Models.EntityFramework
     public class Utilisateur
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("utl_id")]
         public int UtilisateurId { get; set; }
 

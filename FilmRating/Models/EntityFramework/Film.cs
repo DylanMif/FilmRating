@@ -7,7 +7,6 @@ namespace FilmRating.Models.EntityFramework
     public class Film
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("flm_id")]
         public int FilmId { get; set; }
 
