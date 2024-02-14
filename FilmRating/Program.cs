@@ -1,3 +1,6 @@
+using FilmRating.Models.DataManager;
+using FilmRating.Models.EntityFramework;
+using FilmRating.Repository;
 using Microsoft.EntityFrameworkCore;
 using TP3Console.Models.EntityFramework;
 
@@ -12,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<FilmDBContext>(options =>
   options.UseNpgsql(builder.Configuration.GetConnectionString("FilmDB")));
-
+builder.Services.AddScoped<IDataRepository<Utilisateur>, UtilisateurManager>();
 
 var app = builder.Build();
 
